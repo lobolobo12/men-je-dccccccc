@@ -3,11 +3,12 @@ export const sl = {
   demoNotice: 'Demo – ni certificirana denarnica EU za digitalno identiteto.',
 
   // Onboarding / lock
-  welcomeTitle: 'Dobrodošli v SI Wallet',
-  welcomeBody:
-    'Vaša digitalna identiteta, vozniško dovoljenje, diplome in kartica zdravstvenega zavarovanja – shranjeni samo na tem telefonu.',
-  welcomePoints:
-    '• Podatki ostanejo na napravi, brez strežnika ponudnika.\n• Vsako deljenje podatkov potrdite sami.\n• Vidite, kdo je kdaj zahteval vaše podatke.',
+  welcomeTitle: 'Vaši dokumenti, v vašem žepu.',
+  welcomeBody: 'Osebni podatki, vozniško dovoljenje, diploma in kartica zdravstvenega zavarovanja na enem mestu.',
+  point1: 'Podatki ostanejo samo na tem telefonu.',
+  point2: 'Vsako deljenje potrdite sami.',
+  point3: 'Vidite, kdo je kdaj zahteval vaše podatke.',
+  demoShort: 'Prototip',
   getStarted: 'Začni',
   createPin: 'Nastavite 6-mestno kodo PIN',
   confirmPin: 'Ponovno vnesite kodo PIN',
@@ -20,7 +21,11 @@ export const sl = {
   resetWallet: 'Ponastavi denarnico',
 
   // Home
+  homeTitle: 'Moja denarnica',
   myDocuments: 'Moji dokumenti',
+  addDocument: 'Dodaj dokument',
+  presentData: 'Pokaži podatke',
+  tryDemo: 'Preizkusi z vzorčnimi dokumenti',
   emptyTitle: 'Denarnica je prazna',
   emptyBody: 'Dodajte osebno izkaznico (PID), vozniško dovoljenje ali drugo potrdilo.',
   add: 'Dodaj',
@@ -103,6 +108,7 @@ export const sl = {
   exportDone: 'Izvoz kopiran v odložišče (JSON).',
   addDemo: 'Dodaj vzorčna potrdila (demo)',
   demoAdded: 'Vzorčna potrdila so dodana.',
+  security: 'Varnost',
   lockNow: 'Zakleni denarnico',
   wipeAll: 'Izbriši vse podatke',
   wipeConfirm: 'Izbrisani bodo vsi dokumenti, ključi, dnevnik in koda PIN.',
@@ -119,10 +125,12 @@ export const en: Record<StringKey, string> = {
   appName: 'SI Wallet',
   demoNotice: 'Demo – not a certified EU Digital Identity Wallet.',
 
-  welcomeTitle: 'Welcome to SI Wallet',
-  welcomeBody: 'Your digital identity, driving licence, diplomas and health insurance card – stored only on this phone.',
-  welcomePoints:
-    '• Data stays on the device, no provider server.\n• You approve every data sharing yourself.\n• You can see who asked for your data and when.',
+  welcomeTitle: 'Your documents, in your pocket.',
+  welcomeBody: 'Your ID data, driving licence, diploma and health insurance card in one place.',
+  point1: 'Your data stays on this phone only.',
+  point2: 'You approve every share yourself.',
+  point3: 'You see who asked for your data and when.',
+  demoShort: 'Prototype',
   getStarted: 'Get started',
   createPin: 'Set a 6-digit PIN',
   confirmPin: 'Enter the PIN again',
@@ -134,7 +142,11 @@ export const en: Record<StringKey, string> = {
   unlockPrompt: 'Unlock SI Wallet',
   resetWallet: 'Reset wallet',
 
+  homeTitle: 'My wallet',
   myDocuments: 'My documents',
+  addDocument: 'Add document',
+  presentData: 'Share data',
+  tryDemo: 'Try with sample documents',
   emptyTitle: 'Your wallet is empty',
   emptyBody: 'Add your identity data (PID), driving licence or another attestation.',
   add: 'Add',
@@ -210,6 +222,7 @@ export const en: Record<StringKey, string> = {
   exportDone: 'Export copied to the clipboard (JSON).',
   addDemo: 'Add sample credentials (demo)',
   demoAdded: 'Sample credentials added.',
+  security: 'Security',
   lockNow: 'Lock wallet',
   wipeAll: 'Delete all data',
   wipeConfirm: 'All documents, keys, the activity log and the PIN will be deleted.',

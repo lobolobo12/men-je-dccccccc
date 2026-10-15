@@ -1,8 +1,8 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, Linking, Pressable, StyleSheet, Switch, Text, View } from 'react-native';
-import { useTheme } from '../components/theme';
-import { Banner, Button, Card, Label, Row, Screen, Title } from '../components/ui';
+import { fonts, useTheme } from '../components/theme';
+import { Button, Card, Field, Notice, Screen, Section, Title } from '../components/ui';
 import { attributeLabel } from '../i18n/attributes';
 import { claimName, credentialTitle, formatValue } from '../lib/display';
 import type { StoredCredential } from '../lib/types';
@@ -60,7 +60,7 @@ export default function Request() {
     return (
       <Screen>
         <Title>{w.t('error')}</Title>
-        <Banner text={error} />
+        <Notice text={error} />
         <Button title={w.t('ok')} onPress={() => router.back()} />
       </Screen>
     );
@@ -115,31 +115,31 @@ export default function Request() {
   return (
     <Screen>
       <Card>
-        <Row label={w.t('requestFrom')} value={`${verifier.name}\n${verifier.clientId}`} />
+        <Field label={w.t('requestFrom')} value={`${verifier.name}\n${verifier.clientId}`} />
       </Card>
       {verifier.authenticated ? (
-        <Banner tone="ok" text={`${w.t('verifiedVerifier', { domain })}\n${w.t('trustNote')}`} />
+        <Notice tone="ok" text={`${w.t('verifiedVerifier', { domain })}\n${w.t('trustNote')}`} />
       ) : (
-        <Banner text={w.t('unverifiedVerifier')} />
+        <Notice text={w.t('unverifiedVerifier')} />
       )}
-      {missing ? <Banner text={w.t('missingCredential')} /> : null}
+      {missing ? <Notice text={w.t('missingCredential')} /> : null}
 
       {choices.map((c, ci) => (
         <View key={c.query.id} style={styles.block}>
-          <Label>
+          <Section>
             {w.t('credentialUsed')}: {credentialTitle(c.credential, w.t)}
-          </Label>
+          </Section>
           <Card>
             {c.items.map((it, ii) => {
               const claim = c.credential.claims.find((cl) => it.path.every((s, k) => cl.path[k] === s));
               return (
                 <Pressable key={it.path.join('.')} disabled={!it.optional} onPress={() => toggle(ci, ii)} style={styles.item}>
                   <View style={styles.flex}>
-                    <Text style={{ color: t.text, fontSize: 16 }}>
+                    <Text style={{ color: t.text, fontSize: 16, fontFamily: fonts.medium }}>
                       {attributeLabel(claim ? claimName(claim) : it.path[it.path.length - 1], w.locale)}
-                      {it.optional ? <Text style={{ color: t.muted }}> ({w.t('optional')})</Text> : null}
+                      {it.optional ? <Text style={{ color: t.muted, fontFamily: fonts.regular }}> ({w.t('optional')})</Text> : null}
                     </Text>
-                    <Text style={{ color: t.muted }}>{claim ? formatValue(claim.value) : '–'}</Text>
+                    <Text style={{ color: t.muted, fontFamily: fonts.regular, marginTop: 2 }}>{claim ? formatValue(claim.value, w.locale) : '–'}</Text>
                   </View>
                   {it.optional ? <Switch value={it.on} onValueChange={() => toggle(ci, ii)} /> : null}
                 </Pressable>
@@ -149,7 +149,7 @@ export default function Request() {
         </View>
       ))}
 
-      <Button title={w.t('shareSelected')} loading={busy} disabled={missing || choices.length === 0} onPress={share} />
+      <Button icon="share-outline" title={w.t('shareSelected')} loading={busy} disabled={missing || choices.length === 0} onPress={share} />
       <Button title={w.t('decline')} variant="secondary" disabled={busy} onPress={decline} />
     </Screen>
   );

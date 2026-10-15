@@ -1,8 +1,9 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { Alert } from 'react-native';
-import { Banner, Button, Card, Label, Row, Screen, Title } from '../../components/ui';
+import { CredentialCard } from '../../components/CredentialCard';
+import { Button, Card, Field, Notice, Screen, Section } from '../../components/ui';
 import { attributeLabel } from '../../i18n/attributes';
-import { claimName, credentialTitle, formatValue } from '../../lib/display';
+import { claimName, formatValue, sortClaims } from '../../lib/display';
 import { useWallet } from '../../state/wallet';
 
 export default function CredentialDetail() {
@@ -11,32 +12,44 @@ export default function CredentialDetail() {
   const cred = w.data?.credentials.find((c) => c.id === id);
   if (!cred) return null;
   const date = (iso?: string) => (iso ? new Date(iso).toLocaleDateString(w.locale === 'sl' ? 'sl-SI' : 'en-GB') : '–');
+  const v = cred.verification;
+  const claims = sortClaims(cred.claims);
 
   return (
     <Screen>
-      <Title>{credentialTitle(cred, w.t)}</Title>
-      {cred.demo ? <Banner text={w.t('demoNotice')} /> : null}
-      {cred.verification ? (
-        cred.verification.signatureValid && cred.verification.integrityValid ? (
-          <Banner tone="ok" text={`${w.t('signatureOk')}${cred.verification.certificateSubject ? `\n${cred.verification.certificateSubject}` : ''}`} />
+      <CredentialCard credential={cred} />
+      {cred.demo ? <Notice text={w.t('demoNotice')} icon="flask-outline" /> : null}
+      {v ? (
+        v.signatureValid && v.integrityValid ? (
+          <Notice tone="ok" text={`${w.t('signatureOk')}${v.certificateSubject ? `\n${v.certificateSubject}` : ''}`} />
         ) : (
-          <Banner text={w.t('signatureUnchecked')} />
+          <Notice text={w.t('signatureUnchecked')} />
         )
       ) : null}
+
+      <Section>{w.t('details')}</Section>
       <Card>
-        {cred.claims.map((c) => (
-          <Row key={c.path.join('.')} label={attributeLabel(claimName(c), w.locale)} value={formatValue(c.value)} />
+        {claims.map((c, i) => (
+          <Field
+            key={c.path.join('.')}
+            label={attributeLabel(claimName(c), w.locale)}
+            value={formatValue(c.value, w.locale)}
+            last={i === claims.length - 1}
+          />
         ))}
       </Card>
-      <Label>{w.t('details')}</Label>
+
+      <Section>{w.t('issuer')}</Section>
       <Card>
-        <Row label={w.t('issuer')} value={cred.issuer.name ? `${cred.issuer.name}\n${cred.issuer.id}` : cred.issuer.id} />
-        <Row label={w.t('issued')} value={date(cred.issuedAt)} />
-        <Row label={attributeLabel('expiry_date', w.locale)} value={date(cred.expiresAt)} />
-        <Row label={w.t('format')} value={`${cred.format} · ${cred.type}`} />
+        <Field label={w.t('issuer')} value={cred.issuer.name ? `${cred.issuer.name}\n${cred.issuer.id}` : cred.issuer.id} />
+        <Field label={w.t('issued')} value={date(cred.issuedAt)} />
+        <Field label={attributeLabel('expiry_date', w.locale)} value={date(cred.expiresAt)} />
+        <Field label={w.t('format')} value={`${cred.format}\n${cred.type}`} last />
       </Card>
+
       <Button
         variant="danger"
+        icon="trash-outline"
         title={w.t('deleteCredential')}
         onPress={() =>
           Alert.alert(w.t('deleteCredential'), w.t('deleteConfirm'), [

@@ -1,7 +1,7 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator } from 'react-native';
-import { Banner, Body, Button, Card, Input, Label, Row, Screen, Title } from '../components/ui';
+import { Body, Button, Card, Field, Input, Notice, Screen, Section, Title } from '../components/ui';
 import { attributeLabel } from '../i18n/attributes';
 import { configurationName, displayName, IssuanceError, PRE_AUTH_GRANT, acceptOffer, resolveOffer, type ResolvedOffer } from '../protocol/oid4vci';
 import { useWallet } from '../state/wallet';
@@ -32,7 +32,7 @@ export default function Offer() {
     return (
       <Screen>
         <Title>{w.t('error')}</Title>
-        <Banner text={error} />
+        <Notice text={error} />
         <Button title={w.t('ok')} onPress={() => router.back()} />
       </Screen>
     );
@@ -77,18 +77,18 @@ export default function Offer() {
   return (
     <Screen>
       <Card>
-        <Row label={w.t('offerFrom')} value={`${displayName(issuer.display, w.locale) ?? ''}\n${issuer.credential_issuer}`.trim()} />
+        <Field label={w.t('offerFrom')} value={`${displayName(issuer.display, w.locale) ?? ''}\n${issuer.credential_issuer}`.trim()} />
       </Card>
-      <Label>{w.t('offerCredentials')}</Label>
+      <Section>{w.t('offerCredentials')}</Section>
       <Card>
         {names.map((n, i) => (
           <Body key={i}>{n}</Body>
         ))}
       </Card>
-      {!grant ? <Banner text={w.t('authCodeUnsupported')} /> : null}
+      {!grant ? <Notice text={w.t('authCodeUnsupported')} /> : null}
       {needsCode ? (
         <>
-          <Label>{grant?.tx_code?.description ?? w.t('txCode')}</Label>
+          <Section>{grant?.tx_code?.description ?? w.t('txCode')}</Section>
           <Input
             value={txCode}
             onChangeText={setTxCode}
@@ -99,7 +99,7 @@ export default function Offer() {
           />
         </>
       ) : null}
-      <Button title={w.t('accept')} loading={busy} disabled={!grant || (needsCode && !txCode.trim())} onPress={accept} />
+      <Button icon="download-outline" title={w.t('accept')} loading={busy} disabled={!grant || (needsCode && !txCode.trim())} onPress={accept} />
       <Button
         title={w.t('decline')}
         variant="secondary"

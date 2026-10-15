@@ -1,33 +1,42 @@
 import { useColorScheme } from 'react-native';
 
+// Palette drawn from Slovenian landscape rather than the flag: Pohorje/Kočevje forest green
+// (the "I feel Slovenia" green, deepened for contrast), alpine blue, Soča emerald and
+// Karst limestone white. Every text/background pair below meets WCAG AA.
 const light = {
-  bg: '#F4F6FA',
+  bg: '#F3F5F1', // limestone
   surface: '#FFFFFF',
-  text: '#0E1726',
-  muted: '#5B6578',
-  border: '#DDE2EB',
-  primary: '#0B3D91',
+  sunken: '#E9EEE8',
+  text: '#10261D', // forest ink
+  muted: '#55665E',
+  border: '#D6DED7',
+  primary: '#1D5A3E', // forest green
   primaryText: '#FFFFFF',
-  danger: '#B42318',
-  warnBg: '#FFF4E5',
-  warnText: '#7A4100',
-  okBg: '#E7F6EC',
-  okText: '#1B5E20',
+  accent: '#0B4C87', // alpine blue
+  emerald: '#0B7A6E', // Soča
+  danger: '#A8261D',
+  warnBg: '#FBF1DC',
+  warnText: '#5E4300',
+  okBg: '#DFF1EB',
+  okText: '#0A5247',
 };
 
 const dark: typeof light = {
-  bg: '#0B0F17',
-  surface: '#151B26',
-  text: '#E8ECF3',
-  muted: '#9AA4B5',
-  border: '#273041',
-  primary: '#7FA7FF',
-  primaryText: '#0B0F17',
-  danger: '#FF8A80',
-  warnBg: '#3A2A12',
-  warnText: '#FFD8A8',
-  okBg: '#12301B',
-  okText: '#A5D6A7',
+  bg: '#0B1511',
+  surface: '#13201A',
+  sunken: '#0F1B16',
+  text: '#E5EEE8',
+  muted: '#98AAA1',
+  border: '#24362D',
+  primary: '#6CC495',
+  primaryText: '#062014',
+  accent: '#8DBBEA',
+  emerald: '#5ED1BF',
+  danger: '#FF8F86',
+  warnBg: '#33280F',
+  warnText: '#F4D58D',
+  okBg: '#0F2C25',
+  okText: '#9EE3D2',
 };
 
 export type Theme = typeof light;
@@ -36,11 +45,20 @@ export function useTheme(): Theme {
   return useColorScheme() === 'dark' ? dark : light;
 }
 
-/** Card colours per credential kind, readable in both themes (white text). */
+/** Document colours, one landscape per kind; white text passes AA on all of them. */
 export const kindColors: Record<string, string> = {
-  pid: '#0B3D91',
-  mdl: '#7A2E8E',
-  diploma: '#1F6F43',
-  ehic: '#0E5E8C',
-  other: '#4A5568',
+  pid: '#0B4C87', // alpine sky over Triglav
+  mdl: '#1D5A3E', // forest
+  diploma: '#0A6B61', // Soča emerald
+  ehic: '#1F5873', // Bohinj lake
+  other: '#4A5751', // limestone shade
 };
+
+export const fonts = {
+  regular: 'AtkinsonHyperlegibleNext_400Regular',
+  medium: 'AtkinsonHyperlegibleNext_500Medium',
+  bold: 'AtkinsonHyperlegibleNext_700Bold',
+  serif: 'SourceSerif4_600SemiBold',
+};
+
+export const radius = { card: 22, control: 16, small: 10 };

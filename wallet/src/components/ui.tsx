@@ -1,45 +1,52 @@
-import type { ReactNode } from 'react';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import type { ComponentProps, ReactNode } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, TextInput, View, type TextInputProps } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useTheme } from './theme';
+import { fonts, radius, useTheme } from './theme';
 
-export function Screen({ children, scroll = true }: { children: ReactNode; scroll?: boolean }) {
+export type IconName = ComponentProps<typeof Ionicons>['name'];
+
+export function Screen({ children, scroll = true, edges = ['bottom', 'left', 'right'] }: { children: ReactNode; scroll?: boolean; edges?: ('top' | 'bottom' | 'left' | 'right')[] }) {
   const t = useTheme();
   const body = <View style={styles.inner}>{children}</View>;
   return (
-    <SafeAreaView edges={['bottom', 'left', 'right']} style={{ flex: 1, backgroundColor: t.bg }}>
-      {scroll ? <ScrollView contentContainerStyle={{ paddingBottom: 32 }}>{body}</ScrollView> : body}
+    <SafeAreaView edges={edges} style={{ flex: 1, backgroundColor: t.bg }}>
+      {scroll ? <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>{body}</ScrollView> : body}
     </SafeAreaView>
   );
 }
 
-export function Title({ children }: { children: ReactNode }) {
+export function Title({ children, size = 30 }: { children: ReactNode; size?: number }) {
   const t = useTheme();
-  return <Text style={[styles.title, { color: t.text }]}>{children}</Text>;
+  return <Text style={{ color: t.text, fontFamily: fonts.serif, fontSize: size, lineHeight: size * 1.18 }}>{children}</Text>;
 }
 
-export function Body({ children, muted }: { children: ReactNode; muted?: boolean }) {
+export function Body({ children, muted, center }: { children: ReactNode; muted?: boolean; center?: boolean }) {
   const t = useTheme();
-  return <Text style={[styles.body, { color: muted ? t.muted : t.text }]}>{children}</Text>;
+  return (
+    <Text style={[styles.body, { color: muted ? t.muted : t.text, textAlign: center ? 'center' : 'left' }]}>{children}</Text>
+  );
 }
 
-export function Label({ children }: { children: ReactNode }) {
+/** Section heading inside a screen. */
+export function Section({ children }: { children: ReactNode }) {
   const t = useTheme();
-  return <Text style={[styles.label, { color: t.muted }]}>{children}</Text>;
+  return <Text style={[styles.section, { color: t.muted }]}>{children}</Text>;
 }
 
 type ButtonProps = {
   title: string;
   onPress: () => void;
-  variant?: 'primary' | 'secondary' | 'danger';
+  variant?: 'primary' | 'secondary' | 'danger' | 'ghost';
+  icon?: IconName;
   disabled?: boolean;
   loading?: boolean;
 };
 
-export function Button({ title, onPress, variant = 'primary', disabled, loading }: ButtonProps) {
+export function Button({ title, onPress, variant = 'primary', icon, disabled, loading }: ButtonProps) {
   const t = useTheme();
-  const bg = variant === 'primary' ? t.primary : 'transparent';
-  const fg = variant === 'primary' ? t.primaryText : variant === 'danger' ? t.danger : t.primary;
+  const filled = variant === 'primary';
+  const fg = filled ? t.primaryText : variant === 'danger' ? t.danger : t.primary;
   return (
     <Pressable
       accessibilityRole="button"
@@ -48,36 +55,96 @@ export function Button({ title, onPress, variant = 'primary', disabled, loading 
       onPress={onPress}
       style={({ pressed }) => [
         styles.button,
-        { backgroundColor: bg, borderColor: variant === 'primary' ? bg : t.border, opacity: disabled ? 0.5 : pressed ? 0.8 : 1 },
+        {
+          backgroundColor: filled ? t.primary : variant === 'ghost' ? 'transparent' : t.surface,
+          borderColor: filled || variant === 'ghost' ? 'transparent' : t.border,
+          opacity: disabled ? 0.45 : pressed ? 0.85 : 1,
+          transform: [{ scale: pressed ? 0.985 : 1 }],
+        },
       ]}
     >
-      {loading ? <ActivityIndicator color={fg} /> : <Text style={[styles.buttonText, { color: fg }]}>{title}</Text>}
+      {loading ? (
+        <ActivityIndicator color={fg} />
+      ) : (
+        <View style={styles.buttonRow}>
+          {icon ? <Ionicons name={icon} size={20} color={fg} /> : null}
+          <Text style={[styles.buttonText, { color: fg }]}>{title}</Text>
+        </View>
+      )}
     </Pressable>
   );
 }
 
-export function Card({ children }: { children: ReactNode }) {
+export function Card({ children, padded = true }: { children: ReactNode; padded?: boolean }) {
   const t = useTheme();
-  return <View style={[styles.card, { backgroundColor: t.surface, borderColor: t.border }]}>{children}</View>;
+  return <View style={[styles.card, { backgroundColor: t.surface, borderColor: t.border, padding: padded ? 16 : 0 }]}>{children}</View>;
 }
 
-export function Row({ label, value }: { label: string; value: string }) {
+/** Label/value pair for credential attributes. */
+export function Field({ label, value, last }: { label: string; value: string; last?: boolean }) {
   const t = useTheme();
   return (
-    <View style={[styles.row, { borderBottomColor: t.border }]}>
-      <Text style={[styles.rowLabel, { color: t.muted }]}>{label}</Text>
-      <Text selectable style={[styles.rowValue, { color: t.text }]}>
+    <View style={[styles.field, { borderBottomColor: t.border, borderBottomWidth: last ? 0 : StyleSheet.hairlineWidth }]}>
+      <Text style={[styles.fieldLabel, { color: t.muted }]}>{label}</Text>
+      <Text selectable style={[styles.fieldValue, { color: t.text }]}>
         {value}
       </Text>
     </View>
   );
 }
 
-export function Banner({ text, tone = 'warn' }: { text: string; tone?: 'warn' | 'ok' }) {
+/** Tappable row in a grouped list, iOS settings style. */
+export function ListRow({
+  icon,
+  title,
+  subtitle,
+  onPress,
+  tint,
+  right,
+  last,
+}: {
+  icon?: IconName;
+  title: string;
+  subtitle?: string;
+  onPress?: () => void;
+  tint?: string;
+  right?: ReactNode;
+  last?: boolean;
+}) {
   const t = useTheme();
+  const color = tint ?? t.primary;
   return (
-    <View style={[styles.banner, { backgroundColor: tone === 'warn' ? t.warnBg : t.okBg }]}>
-      <Text style={{ color: tone === 'warn' ? t.warnText : t.okText, fontSize: 14 }}>{text}</Text>
+    <Pressable
+      accessibilityRole={onPress ? 'button' : undefined}
+      disabled={!onPress}
+      onPress={onPress}
+      style={({ pressed }) => [styles.listRow, { backgroundColor: pressed ? t.sunken : 'transparent' }]}
+    >
+      {icon ? (
+        <View style={[styles.listIcon, { backgroundColor: t.sunken }]}>
+          <Ionicons name={icon} size={19} color={color} />
+        </View>
+      ) : null}
+      <View style={[styles.listBody, { borderBottomColor: t.border, borderBottomWidth: last ? 0 : StyleSheet.hairlineWidth }]}>
+        <View style={{ flex: 1 }}>
+          <Text style={[styles.listTitle, { color: tint === t.danger ? t.danger : t.text }]}>{title}</Text>
+          {subtitle ? <Text style={[styles.listSub, { color: t.muted }]}>{subtitle}</Text> : null}
+        </View>
+        {right ?? (onPress ? <Ionicons name="chevron-forward" size={18} color={t.muted} /> : null)}
+      </View>
+    </Pressable>
+  );
+}
+
+export function Notice({ text, tone = 'warn', icon }: { text: string; tone?: 'warn' | 'ok' | 'info'; icon?: IconName }) {
+  const t = useTheme();
+  const bg = tone === 'warn' ? t.warnBg : tone === 'ok' ? t.okBg : t.sunken;
+  const fg = tone === 'warn' ? t.warnText : tone === 'ok' ? t.okText : t.muted;
+  const name: IconName = icon ?? (tone === 'warn' ? 'alert-circle' : tone === 'ok' ? 'shield-checkmark' : 'information-circle');
+  return (
+    <View style={[styles.notice, { backgroundColor: bg }]}>
+      <Ionicons name={name} size={20} color={fg} style={{ marginTop: 1 }} />
+      <Text style={[styles.noticeText, { color: fg }]}>{text}</Text>
     </View>
   );
 }
@@ -93,21 +160,39 @@ export function Input(props: TextInputProps) {
   );
 }
 
-export function Gap({ size = 12 }: { size?: number }) {
-  return <View style={{ height: size }} />;
+export function IconButton({ icon, label, onPress }: { icon: IconName; label: string; onPress: () => void }) {
+  const t = useTheme();
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      onPress={onPress}
+      hitSlop={8}
+      style={({ pressed }) => [styles.iconButton, { backgroundColor: pressed ? t.border : t.surface, borderColor: t.border }]}
+    >
+      <Ionicons name={icon} size={22} color={t.text} />
+    </Pressable>
+  );
 }
 
 const styles = StyleSheet.create({
-  inner: { padding: 16, gap: 12 },
-  title: { fontSize: 24, fontWeight: '700' },
-  body: { fontSize: 16, lineHeight: 22 },
-  label: { fontSize: 13, fontWeight: '600', textTransform: 'uppercase', letterSpacing: 0.5 },
-  button: { minHeight: 48, borderRadius: 12, borderWidth: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 16 },
-  buttonText: { fontSize: 16, fontWeight: '600' },
-  card: { borderRadius: 14, borderWidth: 1, padding: 14, gap: 4 },
-  row: { paddingVertical: 10, borderBottomWidth: StyleSheet.hairlineWidth, gap: 2 },
-  rowLabel: { fontSize: 13 },
-  rowValue: { fontSize: 16 },
-  banner: { borderRadius: 10, padding: 12 },
-  input: { borderWidth: 1, borderRadius: 10, padding: 12, fontSize: 16 },
+  inner: { padding: 20, gap: 14 },
+  body: { fontFamily: fonts.regular, fontSize: 16, lineHeight: 24 },
+  section: { fontFamily: fonts.medium, fontSize: 15, marginTop: 10, marginBottom: -4 },
+  button: { minHeight: 54, borderRadius: radius.control, borderWidth: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 18 },
+  buttonRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  buttonText: { fontFamily: fonts.bold, fontSize: 16 },
+  card: { borderRadius: radius.card - 4, borderWidth: StyleSheet.hairlineWidth, overflow: 'hidden' },
+  field: { paddingVertical: 11, gap: 3 },
+  fieldLabel: { fontFamily: fonts.regular, fontSize: 13 },
+  fieldValue: { fontFamily: fonts.medium, fontSize: 17 },
+  listRow: { flexDirection: 'row', alignItems: 'center', paddingLeft: 14, gap: 12 },
+  listIcon: { width: 34, height: 34, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
+  listBody: { flex: 1, flexDirection: 'row', alignItems: 'center', paddingVertical: 14, paddingRight: 14, gap: 8 },
+  listTitle: { fontFamily: fonts.medium, fontSize: 16 },
+  listSub: { fontFamily: fonts.regular, fontSize: 13, marginTop: 2 },
+  notice: { flexDirection: 'row', gap: 10, borderRadius: radius.small + 2, padding: 14 },
+  noticeText: { flex: 1, fontFamily: fonts.regular, fontSize: 14, lineHeight: 20 },
+  input: { borderWidth: 1, borderRadius: radius.control, padding: 14, fontSize: 16, fontFamily: fonts.regular },
+  iconButton: { width: 44, height: 44, borderRadius: 22, borderWidth: StyleSheet.hairlineWidth, alignItems: 'center', justifyContent: 'center' },
 });

@@ -2,7 +2,7 @@ import { CameraView, useCameraPermissions } from 'expo-camera';
 import { router } from 'expo-router';
 import { useRef, useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
-import { Body, Button, Input, Label, Screen } from '../components/ui';
+import { Body, Button, Input, Screen, Section } from '../components/ui';
 import { classifyLink } from '../protocol/links';
 import { useWallet } from '../state/wallet';
 
@@ -38,10 +38,10 @@ export default function Scan() {
       ) : (
         <>
           <Body>{w.t('cameraPermission')}</Body>
-          <Button title={w.t('grantCamera')} onPress={requestPermission} />
+          <Button icon="camera-outline" title={w.t('grantCamera')} onPress={requestPermission} />
         </>
       )}
-      <Label>{w.t('pasteLink')}</Label>
+      <Section>{w.t('pasteLink')}</Section>
       <Input
         value={pasted}
         onChangeText={setPasted}
@@ -50,11 +50,11 @@ export default function Scan() {
         autoCorrect={false}
         multiline
       />
-      <Button title={w.t('continue')} variant="secondary" disabled={!pasted.trim()} onPress={() => handle(pasted)} />
+      <Button icon="link-outline" title={w.t('continue')} variant="secondary" disabled={!pasted.trim()} onPress={() => handle(pasted)} />
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  camera: { height: 320, borderRadius: 16, overflow: 'hidden' },
+  camera: { aspectRatio: 1, borderRadius: 24, overflow: 'hidden' },
 });
