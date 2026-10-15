@@ -23,10 +23,10 @@ export function useTilt() {
       try {
         DeviceMotion.setUpdateInterval(60);
         sub = DeviceMotion.addListener(({ rotation }) => {
-        if (!rotation) return;
-        const clamp = (v: number) => Math.max(-1, Math.min(1, v));
-        Animated.spring(x, { toValue: clamp(rotation.gamma / 0.6), useNativeDriver: true, speed: 8, bounciness: 0 }).start();
-        Animated.spring(y, { toValue: clamp((rotation.beta - 0.8) / 0.6), useNativeDriver: true, speed: 8, bounciness: 0 }).start();
+          if (!rotation) return;
+          const clamp = (v: number) => Math.max(-1, Math.min(1, v));
+          Animated.spring(x, { toValue: clamp(rotation.gamma / 0.6), useNativeDriver: true, speed: 8, bounciness: 0 }).start();
+          Animated.spring(y, { toValue: clamp((rotation.beta - 0.8) / 0.6), useNativeDriver: true, speed: 8, bounciness: 0 }).start();
         });
       } catch {
         // Sensor not usable on this platform; the sheen stays still.
