@@ -18,7 +18,7 @@ export function Screen({ children, scroll = true, edges = ['bottom', 'left', 'ri
 
 export function Title({ children, size = 30 }: { children: ReactNode; size?: number }) {
   const t = useTheme();
-  return <Text style={{ color: t.text, fontFamily: fonts.serif, fontSize: size, lineHeight: size * 1.18 }}>{children}</Text>;
+  return <Text style={{ color: t.text, fontFamily: fonts.display, fontSize: size, lineHeight: size * 1.2, letterSpacing: -0.4 }}>{children}</Text>;
 }
 
 export function Body({ children, muted, center }: { children: ReactNode; muted?: boolean; center?: boolean }) {
@@ -31,7 +31,7 @@ export function Body({ children, muted, center }: { children: ReactNode; muted?:
 /** Section heading inside a screen. */
 export function Section({ children }: { children: ReactNode }) {
   const t = useTheme();
-  return <Text style={[styles.section, { color: t.muted }]}>{children}</Text>;
+  return <Text style={[styles.section, { color: t.text }]}>{children}</Text>;
 }
 
 type ButtonProps = {
@@ -121,7 +121,7 @@ export function ListRow({
       style={({ pressed }) => [styles.listRow, { backgroundColor: pressed ? t.sunken : 'transparent' }]}
     >
       {icon ? (
-        <View style={[styles.listIcon, { backgroundColor: t.sunken }]}>
+        <View style={[styles.listIcon, { backgroundColor: tint === t.danger ? t.warnBg : t.blueTint }]}>
           <Ionicons name={icon} size={19} color={color} />
         </View>
       ) : null}
@@ -178,21 +178,21 @@ export function IconButton({ icon, label, onPress }: { icon: IconName; label: st
 const styles = StyleSheet.create({
   inner: { padding: 20, gap: 14 },
   body: { fontFamily: fonts.regular, fontSize: 16, lineHeight: 24 },
-  section: { fontFamily: fonts.medium, fontSize: 15, marginTop: 10, marginBottom: -4 },
+  section: { fontFamily: fonts.heading, fontSize: 17, marginTop: 10, marginBottom: -2 },
   button: { minHeight: 54, borderRadius: radius.control, borderWidth: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 18 },
   buttonRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   buttonText: { fontFamily: fonts.bold, fontSize: 16 },
-  card: { borderRadius: radius.card - 4, borderWidth: StyleSheet.hairlineWidth, overflow: 'hidden' },
+  card: { borderRadius: radius.tile, borderWidth: StyleSheet.hairlineWidth, overflow: 'hidden' },
   field: { paddingVertical: 11, gap: 3 },
   fieldLabel: { fontFamily: fonts.regular, fontSize: 13 },
   fieldValue: { fontFamily: fonts.medium, fontSize: 17 },
   listRow: { flexDirection: 'row', alignItems: 'center', paddingLeft: 14, gap: 12 },
-  listIcon: { width: 34, height: 34, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
+  listIcon: { width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center' },
   listBody: { flex: 1, flexDirection: 'row', alignItems: 'center', paddingVertical: 14, paddingRight: 14, gap: 8 },
   listTitle: { fontFamily: fonts.medium, fontSize: 16 },
   listSub: { fontFamily: fonts.regular, fontSize: 13, marginTop: 2 },
-  notice: { flexDirection: 'row', gap: 10, borderRadius: radius.small + 2, padding: 14 },
+  notice: { flexDirection: 'row', gap: 10, borderRadius: radius.small, padding: 14 },
   noticeText: { flex: 1, fontFamily: fonts.regular, fontSize: 14, lineHeight: 20 },
-  input: { borderWidth: 1, borderRadius: radius.control, padding: 14, fontSize: 16, fontFamily: fonts.regular },
+  input: { borderWidth: 1, borderRadius: radius.small, padding: 14, fontSize: 16, fontFamily: fonts.regular },
   iconButton: { width: 44, height: 44, borderRadius: 22, borderWidth: StyleSheet.hairlineWidth, alignItems: 'center', justifyContent: 'center' },
 });

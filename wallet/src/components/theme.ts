@@ -1,42 +1,46 @@
 import { useColorScheme } from 'react-native';
 
-// Palette drawn from Slovenian landscape rather than the flag: Pohorje/Kočevje forest green
-// (the "I feel Slovenia" green, deepened for contrast), alpine blue, Soča emerald and
-// Karst limestone white. Every text/background pair below meets WCAG AA.
+// Light, friendly base with Slovenian landscape colours carried by the documents:
+// Triglav sky blue, Soča turquoise, alpine meadow green and Lake Bled blue.
+// Text/background pairs meet WCAG AA (checked in the PR notes).
 const light = {
-  bg: '#F3F5F1', // limestone
+  bg: '#F6F8FC',
   surface: '#FFFFFF',
-  sunken: '#E9EEE8',
-  text: '#10261D', // forest ink
-  muted: '#55665E',
-  border: '#D6DED7',
-  primary: '#1D5A3E', // forest green
+  sunken: '#EEF2F9',
+  text: '#121A2B',
+  muted: '#5A6478',
+  border: '#E3E8F2',
+  primary: '#2350D8', // alpine blue
   primaryText: '#FFFFFF',
-  accent: '#0B4C87', // alpine blue
-  emerald: '#0B7A6E', // Soča
-  danger: '#A8261D',
-  warnBg: '#FBF1DC',
-  warnText: '#5E4300',
-  okBg: '#DFF1EB',
-  okText: '#0A5247',
+  blueTint: '#E8EEFF',
+  green: '#127A45', // meadow
+  greenTint: '#E3F6EA',
+  danger: '#C0262D',
+  warnBg: '#FFF4DE',
+  warnText: '#6A4A00',
+  okBg: '#E3F6EA',
+  okText: '#0F6B3C',
+  gateBg: '#FFFFFF',
 };
 
 const dark: typeof light = {
-  bg: '#0B1511',
-  surface: '#13201A',
-  sunken: '#0F1B16',
-  text: '#E5EEE8',
-  muted: '#98AAA1',
-  border: '#24362D',
-  primary: '#6CC495',
-  primaryText: '#062014',
-  accent: '#8DBBEA',
-  emerald: '#5ED1BF',
-  danger: '#FF8F86',
+  bg: '#0E121A',
+  surface: '#171C27',
+  sunken: '#1E2431',
+  text: '#EEF2F8',
+  muted: '#A3ADC2',
+  border: '#283041',
+  primary: '#7FA2FF',
+  primaryText: '#0E121A',
+  blueTint: '#1C2742',
+  green: '#7FD8A4',
+  greenTint: '#16302A',
+  danger: '#FF8A8F',
   warnBg: '#33280F',
   warnText: '#F4D58D',
-  okBg: '#0F2C25',
-  okText: '#9EE3D2',
+  okBg: '#16302A',
+  okText: '#9EE6BD',
+  gateBg: '#0E121A',
 };
 
 export type Theme = typeof light;
@@ -45,20 +49,21 @@ export function useTheme(): Theme {
   return useColorScheme() === 'dark' ? dark : light;
 }
 
-/** Document colours, one landscape per kind; white text passes AA on all of them. */
-export const kindColors: Record<string, string> = {
-  pid: '#0B4C87', // alpine sky over Triglav
-  mdl: '#1D5A3E', // forest
-  diploma: '#0A6B61', // Soča emerald
-  ehic: '#1F5873', // Bohinj lake
-  other: '#4A5751', // limestone shade
+/** Card gradients (top-left → bottom-right). White text sits on the darker start (≥5.8:1). */
+export const kindGradients: Record<string, [string, string]> = {
+  pid: ['#1F3FBF', '#4C7DFF'], // Triglav sky
+  mdl: ['#0B6F7E', '#16A89C'], // Soča
+  diploma: ['#1B6E3A', '#4FAE45'], // alpine meadow
+  ehic: ['#0E568F', '#2496CC'], // Lake Bled
+  other: ['#434B63', '#76819E'],
 };
 
 export const fonts = {
   regular: 'AtkinsonHyperlegibleNext_400Regular',
   medium: 'AtkinsonHyperlegibleNext_500Medium',
   bold: 'AtkinsonHyperlegibleNext_700Bold',
-  serif: 'SourceSerif4_600SemiBold',
+  display: 'PlusJakartaSans_800ExtraBold',
+  heading: 'PlusJakartaSans_700Bold',
 };
 
-export const radius = { card: 22, control: 16, small: 10 };
+export const radius = { card: 24, tile: 22, control: 999, small: 14 };

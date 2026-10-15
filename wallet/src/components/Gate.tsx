@@ -6,13 +6,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useWallet } from '../state/wallet';
 import { TriglavMotif } from './Motif';
 import { PinPad } from './PinPad';
-import { fonts, radius } from './theme';
+import { fonts, radius, useTheme, type Theme } from './theme';
 import type { IconName } from './ui';
 
-const FOREST = '#1D5A3E';
-const FOREST_DEEP = '#123C29';
-const ON = '#FFFFFF';
-const ON_MUTED = 'rgba(255,255,255,0.78)';
+const SKY: [string, string] = ['#2350D8', '#16A89C'];
 
 /** Shown instead of the app until the wallet is set up and unlocked. */
 export function Gate() {
@@ -20,49 +17,54 @@ export function Gate() {
   const [intro, setIntro] = useState(true);
   return (
     <Backdrop low={!(w.status === 'new' && intro)}>
-      {w.status === 'loading' ? <ActivityIndicator color={ON} style={{ flex: 1 }} /> : w.status === 'new' ? <Onboarding onLeaveIntro={() => setIntro(false)} /> : <Unlock />}
+      {w.status === 'loading' ? <ActivityIndicator style={{ flex: 1 }} /> : w.status === 'new' ? <Onboarding onLeaveIntro={() => setIntro(false)} /> : <Unlock />}
     </Backdrop>
   );
 }
 
 function Backdrop({ children, low }: { children: ReactNode; low?: boolean }) {
   const { width } = useWindowDimensions();
+  const t = useTheme();
   return (
-    <View style={[styles.fill, { backgroundColor: FOREST }]}>
-      <StatusBar style="light" />
+    <View style={[styles.fill, { backgroundColor: t.gateBg }]}>
+      <StatusBar style="auto" />
       <View style={styles.motif} pointerEvents="none">
-        <TriglavMotif width={width} height={low ? 96 : undefined} opacity={low ? 0.1 : 0.14} fillPeaks color={ON} />
+        <TriglavMotif width={width} height={low ? 96 : undefined} opacity={low ? 0.14 : 0.22} fillPeaks colors={SKY} />
       </View>
       <SafeAreaView style={styles.fill}>{children}</SafeAreaView>
     </View>
   );
 }
 
-function Point({ icon, text }: { icon: IconName; text: string }) {
+function Point({ icon, text, tint, color }: { icon: IconName; text: string; tint: string; color: string }) {
+  const t = useTheme();
   return (
     <View style={styles.point}>
-      <View style={styles.pointIcon}>
-        <Ionicons name={icon} size={20} color={ON} />
+      <View style={[styles.pointIcon, { backgroundColor: tint }]}>
+        <Ionicons name={icon} size={21} color={color} />
       </View>
-      <Text style={styles.pointText}>{text}</Text>
+      <Text style={[styles.pointText, { color: t.text }]}>{text}</Text>
     </View>
   );
 }
 
-function LightButton({ title, onPress }: { title: string; onPress: () => void }) {
+function MainButton({ title, onPress }: { title: string; onPress: () => void }) {
+  const t = useTheme();
   return (
     <Pressable
       accessibilityRole="button"
       onPress={onPress}
-      style={({ pressed }) => [styles.lightButton, { opacity: pressed ? 0.85 : 1 }]}
+      style={({ pressed }) => [styles.mainButton, { backgroundColor: t.primary, transform: [{ scale: pressed ? 0.98 : 1 }] }]}
     >
-      <Text style={styles.lightButtonText}>{title}</Text>
+      <Text style={[styles.mainButtonText, { color: t.primaryText }]}>{title}</Text>
     </Pressable>
   );
 }
 
 function Onboarding({ onLeaveIntro }: { onLeaveIntro: () => void }) {
   const w = useWallet();
+  const t = useTheme();
+  const st = themed(t);
   const [step, setStep] = useState<'intro' | 'pin' | 'confirm'>('intro');
   const [first, setFirst] = useState('');
   const [error, setError] = useState('');
@@ -72,18 +74,18 @@ function Onboarding({ onLeaveIntro }: { onLeaveIntro: () => void }) {
     return (
       <View style={styles.page}>
         <View style={styles.brand}>
-          <Text style={styles.wordmark}>SI Wallet</Text>
-          <Text style={styles.demoPill}>{w.t('demoShort')}</Text>
+          <Text style={st.wordmark}>SI Wallet</Text>
+          <Text style={st.demoPill}>{w.t('demoShort')}</Text>
         </View>
-        <Text style={styles.hero}>{w.t('welcomeTitle')}</Text>
-        <Text style={styles.lead}>{w.t('welcomeBody')}</Text>
+        <Text style={st.hero}>{w.t('welcomeTitle')}</Text>
+        <Text style={st.lead}>{w.t('welcomeBody')}</Text>
         <View style={styles.points}>
-          <Point icon="phone-portrait-outline" text={w.t('point1')} />
-          <Point icon="hand-left-outline" text={w.t('point2')} />
-          <Point icon="eye-outline" text={w.t('point3')} />
+          <Point icon="phone-portrait-outline" text={w.t('point1')} tint={t.blueTint} color={t.primary} />
+          <Point icon="hand-left-outline" text={w.t('point2')} tint={t.greenTint} color={t.green} />
+          <Point icon="eye-outline" text={w.t('point3')} tint={t.warnBg} color={t.warnText} />
         </View>
         <View style={{ flex: 1 }} />
-        <LightButton
+        <MainButton
           title={w.t('getStarted')}
           onPress={() => {
             onLeaveIntro();
@@ -95,10 +97,14 @@ function Onboarding({ onLeaveIntro }: { onLeaveIntro: () => void }) {
   }
   return (
     <View style={[styles.page, styles.center]}>
-      <Ionicons name="lock-closed-outline" size={32} color={ON} />
-      <Text style={styles.pinTitle}>{step === 'pin' ? w.t('createPin') : w.t('confirmPin')}</Text>
-      <Text style={[styles.pinError, { opacity: error ? 1 : 0 }]}>{error || ' '}</Text>
+      <View style={[styles.lockBadge, { backgroundColor: t.blueTint }]}>
+        <Ionicons name="lock-closed" size={26} color={t.primary} />
+      </View>
+      <Text style={st.pinTitle}>{step === 'pin' ? w.t('createPin') : w.t('confirmPin')}</Text>
+      <Text style={[st.pinError, { opacity: error ? 1 : 0 }]}>{error || ' '}</Text>
       <PinPad
+        color={t.text}
+        keyColor={t.blueTint}
         disabled={busy}
         onComplete={async (pin) => {
           if (step === 'pin') {
@@ -114,13 +120,15 @@ function Onboarding({ onLeaveIntro }: { onLeaveIntro: () => void }) {
           }
         }}
       />
-      <View style={{ height: 24 }}>{busy ? <ActivityIndicator color={ON} /> : null}</View>
+      <View style={{ height: 24 }}>{busy ? <ActivityIndicator color={t.primary} /> : null}</View>
     </View>
   );
 }
 
 function Unlock() {
   const w = useWallet();
+  const t = useTheme();
+  const st = themed(t);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const tried = useRef(false);
@@ -136,9 +144,9 @@ function Unlock() {
   if (w.status === 'lockedOut') {
     return (
       <View style={[styles.page, styles.center]}>
-        <Ionicons name="alert-circle-outline" size={40} color={ON} />
-        <Text style={styles.pinTitle}>{w.t('lockedOut')}</Text>
-        <LightButton
+        <Ionicons name="alert-circle-outline" size={40} color={t.danger} />
+        <Text style={st.pinTitle}>{w.t('lockedOut')}</Text>
+        <MainButton
           title={w.t('resetWallet')}
           onPress={() =>
             Alert.alert(w.t('resetWallet'), w.t('wipeConfirm'), [
@@ -153,10 +161,12 @@ function Unlock() {
 
   return (
     <View style={[styles.page, styles.center]}>
-      <Text style={styles.wordmark}>SI Wallet</Text>
-      <Text style={styles.pinTitle}>{w.t('enterPin')}</Text>
-      <Text style={[styles.pinError, { opacity: error ? 1 : 0 }]}>{error || ' '}</Text>
+      <Text style={st.wordmark}>SI Wallet</Text>
+      <Text style={st.pinTitle}>{w.t('enterPin')}</Text>
+      <Text style={[st.pinError, { opacity: error ? 1 : 0 }]}>{error || ' '}</Text>
       <PinPad
+        color={t.text}
+        keyColor={t.blueTint}
         disabled={busy}
         onComplete={async (pin) => {
           setBusy(true);
@@ -167,11 +177,11 @@ function Unlock() {
       />
       <View style={{ height: 52, justifyContent: 'center' }}>
         {busy ? (
-          <ActivityIndicator color={ON} />
+          <ActivityIndicator color={t.primary} />
         ) : useBio ? (
           <Pressable accessibilityRole="button" onPress={() => w.unlockWithBiometrics()} style={styles.bio} hitSlop={10}>
-            <Ionicons name="scan-outline" size={22} color={ON} />
-            <Text style={styles.bioText}>{w.t('useBiometrics')}</Text>
+            <Ionicons name="scan-outline" size={22} color={t.primary} />
+            <Text style={[styles.bioText, { color: t.primary }]}>{w.t('useBiometrics')}</Text>
           </Pressable>
         ) : null}
       </View>
@@ -179,34 +189,38 @@ function Unlock() {
   );
 }
 
+const themed = (t: Theme) =>
+  StyleSheet.create({
+    wordmark: { color: t.primary, fontFamily: fonts.display, fontSize: 20 },
+    demoPill: {
+      color: t.warnText,
+      backgroundColor: t.warnBg,
+      fontFamily: fonts.bold,
+      fontSize: 12,
+      borderRadius: 999,
+      paddingHorizontal: 12,
+      paddingVertical: 5,
+      overflow: 'hidden',
+    },
+    hero: { color: t.text, fontFamily: fonts.display, fontSize: 38, lineHeight: 44, letterSpacing: -0.8 },
+    lead: { color: t.muted, fontFamily: fonts.regular, fontSize: 17, lineHeight: 25 },
+    pinTitle: { color: t.text, fontFamily: fonts.display, fontSize: 24, textAlign: 'center', marginTop: 8, letterSpacing: -0.3 },
+    pinError: { color: t.danger, fontFamily: fonts.medium, fontSize: 15, textAlign: 'center', minHeight: 20 },
+  });
+
 const styles = StyleSheet.create({
   fill: { flex: 1 },
   motif: { position: 'absolute', left: 0, right: 0, bottom: 0 },
   page: { flex: 1, paddingHorizontal: 28, paddingVertical: 20, gap: 14 },
   center: { alignItems: 'center', justifyContent: 'center' },
   brand: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28 },
-  wordmark: { color: ON, fontFamily: fonts.serif, fontSize: 22 },
-  demoPill: {
-    color: ON,
-    fontFamily: fonts.medium,
-    fontSize: 12,
-    borderColor: 'rgba(255,255,255,0.5)',
-    borderWidth: 1,
-    borderRadius: 999,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    overflow: 'hidden',
-  },
-  hero: { color: ON, fontFamily: fonts.serif, fontSize: 38, lineHeight: 44 },
-  lead: { color: ON_MUTED, fontFamily: fonts.regular, fontSize: 17, lineHeight: 25 },
   points: { gap: 14, marginTop: 18 },
   point: { flexDirection: 'row', alignItems: 'center', gap: 14 },
-  pointIcon: { width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(255,255,255,0.14)', alignItems: 'center', justifyContent: 'center' },
-  pointText: { flex: 1, color: ON, fontFamily: fonts.regular, fontSize: 16, lineHeight: 22 },
-  lightButton: { backgroundColor: ON, minHeight: 56, borderRadius: radius.control, alignItems: 'center', justifyContent: 'center' },
-  lightButtonText: { color: FOREST_DEEP, fontFamily: fonts.bold, fontSize: 17 },
-  pinTitle: { color: ON, fontFamily: fonts.serif, fontSize: 26, textAlign: 'center', marginTop: 8 },
-  pinError: { color: '#FFE2A8', fontFamily: fonts.medium, fontSize: 15, textAlign: 'center', minHeight: 20 },
+  pointIcon: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
+  pointText: { flex: 1, fontFamily: fonts.medium, fontSize: 16, lineHeight: 22 },
+  mainButton: { minHeight: 56, borderRadius: radius.control, alignItems: 'center', justifyContent: 'center' },
+  mainButtonText: { fontFamily: fonts.bold, fontSize: 17 },
+  lockBadge: { width: 64, height: 64, borderRadius: 32, alignItems: 'center', justifyContent: 'center' },
   bio: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  bioText: { color: ON, fontFamily: fonts.medium, fontSize: 16 },
+  bioText: { fontFamily: fonts.bold, fontSize: 16 },
 });

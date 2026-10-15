@@ -6,10 +6,10 @@ import { fonts } from './theme';
 
 export const PIN_LENGTH = 6;
 
-type Props = { onComplete: (pin: string) => void; disabled?: boolean; color?: string };
+type Props = { onComplete: (pin: string) => void; disabled?: boolean; color?: string; keyColor?: string };
 
 /** Numeric PIN pad drawn for a dark/coloured background. */
-export function PinPad({ onComplete, disabled, color = '#FFFFFF' }: Props) {
+export function PinPad({ onComplete, disabled, color = '#FFFFFF', keyColor = 'rgba(255,255,255,0.12)' }: Props) {
   const [pin, setPin] = useState('');
 
   const press = (key: string) => {
@@ -43,7 +43,7 @@ export function PinPad({ onComplete, disabled, color = '#FFFFFF' }: Props) {
               onPress={() => press(k)}
               style={({ pressed }) => [
                 styles.key,
-                k !== 'del' && { backgroundColor: pressed ? 'rgba(255,255,255,0.28)' : 'rgba(255,255,255,0.12)' },
+                k !== 'del' && { backgroundColor: keyColor, opacity: pressed ? 0.6 : 1, transform: [{ scale: pressed ? 0.94 : 1 }] },
               ]}
             >
               {k === 'del' ? (
@@ -65,5 +65,5 @@ const styles = StyleSheet.create({
   dot: { width: 14, height: 14, borderRadius: 7, borderWidth: 2 },
   grid: { width: 282, flexDirection: 'row', flexWrap: 'wrap', columnGap: 27, rowGap: 18 },
   key: { width: 76, height: 76, borderRadius: 38, alignItems: 'center', justifyContent: 'center' },
-  keyText: { fontSize: 32, fontFamily: fonts.regular },
+  keyText: { fontSize: 30, fontFamily: fonts.heading },
 });

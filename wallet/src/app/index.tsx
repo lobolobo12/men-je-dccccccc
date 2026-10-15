@@ -8,24 +8,18 @@ import { Body, Button, Card, IconButton, ListRow, Screen, Section, Title, type I
 import { makeDemoCredentials } from '../lib/demo';
 import { useWallet } from '../state/wallet';
 
-function ActionTile({ icon, label, onPress, filled }: { icon: IconName; label: string; onPress: () => void; filled?: boolean }) {
+function ActionTile({ icon, label, onPress, tint, color }: { icon: IconName; label: string; onPress: () => void; tint: string; color: string }) {
   const t = useTheme();
-  const fg = filled ? t.primaryText : t.primary;
   return (
     <Pressable
       accessibilityRole="button"
       onPress={onPress}
-      style={({ pressed }) => [
-        styles.tile,
-        {
-          backgroundColor: filled ? t.primary : t.surface,
-          borderColor: filled ? t.primary : t.border,
-          transform: [{ scale: pressed ? 0.97 : 1 }],
-        },
-      ]}
+      style={({ pressed }) => [styles.tile, { backgroundColor: tint, transform: [{ scale: pressed ? 0.97 : 1 }] }]}
     >
-      <Ionicons name={icon} size={26} color={fg} />
-      <Text style={[styles.tileText, { color: fg }]}>{label}</Text>
+      <View style={[styles.tileIcon, { backgroundColor: t.surface }]}>
+        <Ionicons name={icon} size={24} color={color} />
+      </View>
+      <Text style={[styles.tileText, { color }]}>{label}</Text>
     </Pressable>
   );
 }
@@ -57,14 +51,26 @@ export default function Home() {
       </View>
 
       <View style={styles.tiles}>
-        <ActionTile filled icon="add-circle-outline" label={w.t('addDocument')} onPress={() => router.push({ pathname: '/scan', params: { mode: 'add' } })} />
-        <ActionTile icon="qr-code-outline" label={w.t('presentData')} onPress={() => router.push({ pathname: '/scan', params: { mode: 'share' } })} />
+        <ActionTile
+          icon="add"
+          label={w.t('addDocument')}
+          tint={t.blueTint}
+          color={t.primary}
+          onPress={() => router.push({ pathname: '/scan', params: { mode: 'add' } })}
+        />
+        <ActionTile
+          icon="qr-code-outline"
+          label={w.t('presentData')}
+          tint={t.greenTint}
+          color={t.green}
+          onPress={() => router.push({ pathname: '/scan', params: { mode: 'share' } })}
+        />
       </View>
 
       {creds.length === 0 ? (
         <Card>
           <View style={styles.empty}>
-            <TriglavMotif width={width - 72} color={t.primary} opacity={0.35} strokeWidth={2} />
+            <TriglavMotif width={width - 72} colors={['#2350D8', '#16A89C']} opacity={0.4} strokeWidth={2.5} fillPeaks />
             <Title size={22}>{w.t('emptyTitle')}</Title>
             <Body muted center>
               {w.t('emptyBody')}
@@ -98,10 +104,11 @@ export default function Home() {
 
 const styles = StyleSheet.create({
   header: { flexDirection: 'row', alignItems: 'flex-end', gap: 12, marginTop: 8, marginBottom: 6 },
-  wordmark: { fontFamily: fonts.bold, fontSize: 14, marginBottom: 2 },
+  wordmark: { fontFamily: fonts.display, fontSize: 15, marginBottom: 2 },
   tiles: { flexDirection: 'row', gap: 12 },
-  tile: { flex: 1, borderRadius: radius.card - 4, borderWidth: 1, padding: 16, minHeight: 104, justifyContent: 'space-between' },
-  tileText: { fontFamily: fonts.bold, fontSize: 16 },
+  tile: { flex: 1, borderRadius: radius.tile, padding: 16, minHeight: 116, justifyContent: 'space-between' },
+  tileIcon: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
+  tileText: { fontFamily: fonts.heading, fontSize: 16 },
   empty: { alignItems: 'center', gap: 12, paddingVertical: 8 },
   footnote: { fontFamily: fonts.regular, fontSize: 12, textAlign: 'center', marginTop: 6 },
 });

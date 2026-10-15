@@ -2,7 +2,8 @@ import '../lib/polyfills';
 import { AtkinsonHyperlegibleNext_400Regular } from '@expo-google-fonts/atkinson-hyperlegible-next/400Regular';
 import { AtkinsonHyperlegibleNext_500Medium } from '@expo-google-fonts/atkinson-hyperlegible-next/500Medium';
 import { AtkinsonHyperlegibleNext_700Bold } from '@expo-google-fonts/atkinson-hyperlegible-next/700Bold';
-import { SourceSerif4_600SemiBold } from '@expo-google-fonts/source-serif-4/600SemiBold';
+import { PlusJakartaSans_700Bold } from '@expo-google-fonts/plus-jakarta-sans/700Bold';
+import { PlusJakartaSans_800ExtraBold } from '@expo-google-fonts/plus-jakarta-sans/800ExtraBold';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -17,9 +18,10 @@ export default function RootLayout() {
     AtkinsonHyperlegibleNext_400Regular,
     AtkinsonHyperlegibleNext_500Medium,
     AtkinsonHyperlegibleNext_700Bold,
-    SourceSerif4_600SemiBold,
+    PlusJakartaSans_700Bold,
+    PlusJakartaSans_800ExtraBold,
   });
-  if (!loaded) return <View style={{ flex: 1, backgroundColor: '#1D5A3E' }} />;
+  if (!loaded) return <View style={{ flex: 1, backgroundColor: '#F6F8FC' }} />;
   return (
     <SafeAreaProvider>
       <WalletProvider>
@@ -41,7 +43,7 @@ function Root() {
           headerStyle: { backgroundColor: t.bg },
           headerShadowVisible: false,
           headerTintColor: t.primary,
-          headerTitleStyle: { color: t.text, fontFamily: fonts.bold, fontSize: 17 },
+          headerTitleStyle: { color: t.text, fontFamily: fonts.heading, fontSize: 17 },
           contentStyle: { backgroundColor: t.bg },
           headerBackButtonDisplayMode: 'minimal',
         }}
