@@ -178,7 +178,7 @@ export function coseKeyFromJwk(jwk: PublicJwk): CborMap {
 
 /**
  * Issues a test mdoc signed by `issuerSecret` with the certificate `issuerCertDer` in x5chain.
- * Only used by tests; real mdocs come from issuers.
+ * Used by tests and the on-device demo issuer; real mdocs come from issuers.
  */
 export function issueTestMdoc(params: {
   docType: string;

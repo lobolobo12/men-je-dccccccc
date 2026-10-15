@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
-import { ActivityIndicator, Linking, Pressable, StyleSheet, Switch, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Linking, Pressable, StyleSheet, Switch, Text, View } from 'react-native';
 import { Hero } from '../components/Hero';
 import { fonts, heroColors, useTheme } from '../components/theme';
 import { Button, Card, Field, Notice, Screen, Section, Title } from '../components/ui';
@@ -16,6 +16,7 @@ import {
   type CredentialQuery,
   type ResolvedRequest,
 } from '../protocol/oid4vp';
+import { walletFetch } from '../protocol/demoVerifier';
 import { useWallet } from '../state/wallet';
 
 type Choice = { query: CredentialQuery; credential: StoredCredential; items: { path: string[]; optional: boolean; on: boolean }[] };
@@ -31,7 +32,7 @@ export default function Request() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    resolveRequest(uri)
+    resolveRequest(uri, walletFetch)
       .then((r) => {
         const creds = w.data?.credentials ?? [];
         const out: Choice[] = [];
@@ -90,10 +91,19 @@ export default function Request() {
     setBusy(true);
     try {
       const selections = choices.map((c) => ({ query: c.query, credential: c.credential, paths: c.items.filter((i) => i.on).map((i) => i.path) }));
-      const { redirectUri } = await submitPresentation(resolved, selections);
+      const { redirectUri, body } = await submitPresentation(resolved, selections, walletFetch);
       await log('presentation', true);
       router.replace('/');
-      if (redirectUri) Linking.openURL(redirectUri).catch(() => undefined);
+      const demo = body.demo_received as Record<string, Record<string, unknown>> | undefined;
+      if (demo) {
+        // Built-in demo verifier: show exactly what it received, so selective disclosure is visible.
+        const lines = Object.values(demo).flatMap((claims) =>
+          Object.entries(claims).map(([k, v]) => `${attributeLabel(k, w.locale)}: ${formatValue(v, w.locale)}`),
+        );
+        Alert.alert(w.t('demoReceivedTitle'), lines.join('\n'));
+      } else if (redirectUri) {
+        Linking.openURL(redirectUri).catch(() => undefined);
+      }
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);
       await log('presentation', false, msg);
@@ -105,7 +115,7 @@ export default function Request() {
 
   const decline = async () => {
     setBusy(true);
-    await declinePresentation(resolved);
+    await declinePresentation(resolved, walletFetch);
     await log('presentation_declined', true);
     router.back();
   };

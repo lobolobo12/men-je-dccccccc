@@ -223,7 +223,7 @@ export async function submitPresentation(
   resolved: ResolvedRequest,
   selections: Selection[],
   fetchFn: Fetch = fetch,
-): Promise<{ redirectUri?: string }> {
+): Promise<{ redirectUri?: string; body: Record<string, unknown> }> {
   const { request, mode } = resolved;
   const responseUri = request.response_uri ?? request.redirect_uri;
   if (!responseUri) throw new PresentationError('Request has no response_uri');
@@ -293,8 +293,8 @@ export async function submitPresentation(
     body: form.toString(),
   });
   if (!res.ok) throw new PresentationError(`response_uri → ${res.status} ${await res.text().catch(() => '')}`.trim());
-  const json = (await res.json().catch(() => ({}))) as { redirect_uri?: string };
-  return { redirectUri: json.redirect_uri };
+  const json = (await res.json().catch(() => ({}))) as Record<string, unknown>;
+  return { redirectUri: typeof json.redirect_uri === 'string' ? json.redirect_uri : undefined, body: json };
 }
 
 export async function declinePresentation(resolved: ResolvedRequest, fetchFn: Fetch = fetch): Promise<void> {

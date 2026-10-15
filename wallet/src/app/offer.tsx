@@ -6,6 +6,7 @@ import { heroColors } from '../components/theme';
 import { Body, Button, Card, Field, Input, Notice, Screen, Section, Title } from '../components/ui';
 import { attributeLabel } from '../i18n/attributes';
 import { configurationName, displayName, IssuanceError, PRE_AUTH_GRANT, acceptOffer, resolveOffer, type ResolvedOffer } from '../protocol/oid4vci';
+import { walletFetch } from '../protocol/demoVerifier';
 import { useWallet } from '../state/wallet';
 
 export default function Offer() {
@@ -24,7 +25,7 @@ export default function Offer() {
   };
 
   useEffect(() => {
-    resolveOffer(uri)
+    resolveOffer(uri, walletFetch)
       .then(setResolved)
       .catch((e) => setError(explain(e)));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -57,7 +58,7 @@ export default function Offer() {
   const accept = async () => {
     setBusy(true);
     try {
-      const issued = await acceptOffer(resolved, { txCode: needsCode ? txCode.trim() : undefined, locale: w.locale }, fetch);
+      const issued = await acceptOffer(resolved, { txCode: needsCode ? txCode.trim() : undefined, locale: w.locale }, walletFetch);
       await w.addCredentials(
         issued.map((i) => ({ ...i.credential, verification: i.verification })),
         {

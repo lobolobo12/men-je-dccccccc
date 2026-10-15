@@ -1,3 +1,4 @@
+import { attributeLabel } from '../i18n/attributes';
 import type { StringKey } from '../i18n/strings';
 import type { Claim, StoredCredential } from './types';
 
@@ -52,9 +53,15 @@ function formatRaw(value: unknown, locale: 'sl' | 'en'): string {
   if (value instanceof Uint8Array) return `[${value.length} B]`;
   if (Array.isArray(value)) return value.map((v) => formatValue(v, locale)).join(', ');
   if (typeof value === 'object') {
-    return Object.entries(value as Record<string, unknown>)
-      .map(([k, v]) => `${k}: ${formatValue(v, locale)}`)
-      .join('; ');
+    const o = value as Record<string, unknown>;
+    // ISO 18013-5 driving privilege: "B (1. 6. 2013 – 1. 6. 2033)"
+    if (typeof o.vehicle_category_code === 'string') {
+      const range = [o.issue_date, o.expiry_date].filter(Boolean).map((d) => formatValue(d, locale)).join(' – ');
+      return range ? `${o.vehicle_category_code} (${range})` : o.vehicle_category_code;
+    }
+    return Object.entries(o)
+      .map(([k, v]) => `${attributeLabel(k, locale)}: ${formatValue(v, locale)}`)
+      .join(', ');
   }
   return String(value);
 }

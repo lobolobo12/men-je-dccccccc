@@ -4,7 +4,8 @@ import { useRef, useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
 import { Hero } from '../components/Hero';
 import { heroColors } from '../components/theme';
-import { Body, Button, Card, Input, Screen, Section } from '../components/ui';
+import { Body, Button, Card, Input, ListRow, Screen, Section } from '../components/ui';
+import { startDemoRequest } from '../protocol/demoVerifier';
 import { classifyLink } from '../protocol/links';
 import { useWallet } from '../state/wallet';
 
@@ -43,6 +44,18 @@ export default function Scan() {
           <Button icon="camera-outline" title={w.t('grantCamera')} onPress={requestPermission} />
         </Card>
       )}
+      <Section>{w.t('tryWithoutQr')}</Section>
+      <Card padded={false}>
+        <ListRow icon="wine-outline" title={w.t('demoAge')} subtitle={w.t('demoAgeSub')} onPress={() => handle(startDemoRequest('age', w.locale))} />
+        <ListRow icon="car-sport-outline" title={w.t('demoCar')} subtitle={w.t('demoCarSub')} onPress={() => handle(startDemoRequest('car', w.locale))} />
+        <ListRow
+          icon="business-outline"
+          title={w.t('demoBank')}
+          subtitle={w.t('demoBankSub')}
+          onPress={() => handle(startDemoRequest('bank', w.locale))}
+          last
+        />
+      </Card>
       <Section>{w.t('pasteLink')}</Section>
       <Input
         value={pasted}

@@ -5,12 +5,15 @@ import { AtkinsonHyperlegibleNext_700Bold } from '@expo-google-fonts/atkinson-hy
 import { PlusJakartaSans_700Bold } from '@expo-google-fonts/plus-jakarta-sans/700Bold';
 import { PlusJakartaSans_800ExtraBold } from '@expo-google-fonts/plus-jakarta-sans/800ExtraBold';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import * as Linking from 'expo-linking';
+import { router, Stack } from 'expo-router';
+import { useEffect, useRef } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Gate } from '../components/Gate';
 import { fonts, useTheme } from '../components/theme';
+import { classifyLink } from '../protocol/links';
 import { useWallet, WalletProvider } from '../state/wallet';
 
 export default function RootLayout() {
@@ -31,9 +34,26 @@ export default function RootLayout() {
   );
 }
 
+/**
+ * Opens credential offers and presentation requests that arrive as links (openid-credential-offer://,
+ * openid4vp://, …) once the wallet is unlocked. Needs a standalone build; Expo Go only receives exp:// links.
+ */
+function useIncomingLinks(unlocked: boolean) {
+  const url = Linking.useURL();
+  const handled = useRef<string | null>(null);
+  useEffect(() => {
+    if (!unlocked || !url || handled.current === url) return;
+    const link = classifyLink(url);
+    if (link.kind === 'unknown') return;
+    handled.current = url;
+    router.push({ pathname: link.kind === 'offer' ? '/offer' : '/request', params: { uri: link.uri } });
+  }, [unlocked, url]);
+}
+
 function Root() {
   const w = useWallet();
   const t = useTheme();
+  useIncomingLinks(w.status === 'unlocked');
   if (w.status !== 'unlocked') return <Gate />;
   return (
     <>
