@@ -20,9 +20,6 @@
       "predictiveBackGestureEnabled": false,
       "package": "si.wallet.demo"
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
     "scheme": [
       "siwallet",
       "openid-credential-offer",
@@ -50,6 +47,18 @@
     ],
     "runtimeVersion": {
       "policy": "appVersion"
+    },
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "updates": {
+      "url": "https://u.expo.dev/29213344-c890-473e-9f38-26e39c5261ed"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "29213344-c890-473e-9f38-26e39c5261ed"
+      }
     }
   }
 }
