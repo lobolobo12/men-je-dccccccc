@@ -47,6 +47,9 @@
           "faceIDPermission": "SI Wallet uporablja Face ID za odklepanje denarnice. / SI Wallet uses Face ID to unlock the wallet."
         }
       ]
-    ]
+    ],
+    "runtimeVersion": {
+      "policy": "appVersion"
+    }
   }
 }
