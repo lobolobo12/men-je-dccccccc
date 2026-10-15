@@ -68,10 +68,14 @@ jobs:
           PROJECT_ID=$(node -p 'require("./app.json").expo.extra.eas.projectId')
           GROUP=$(node -p 'require("./update.json")[0].group')
           OWNER=$(npx --yes eas-cli@latest whoami 2>/dev/null | head -1)
+          LINK="exp://u.expo.dev/$PROJECT_ID/group/$GROUP"
+          PAGE="https://expo.dev/accounts/$OWNER/projects/si-wallet/updates/$GROUP"
+          echo "Expo Go link: $LINK"
+          echo "Update page:  $PAGE"
           {
             echo "## SI Wallet in Expo Go"
             echo ""
             echo "1. Install **Expo Go** from the App Store / Play Store and sign in with your Expo account."
-            echo "2. Open this link on your phone: exp://u.expo.dev/$PROJECT_ID/group/$GROUP"
-            echo "3. Or open the update page and tap Preview: https://expo.dev/accounts/$OWNER/projects/si-wallet/updates/$GROUP"
+            echo "2. Open this link on your phone: $LINK"
+            echo "3. Or open the update page and tap Preview: $PAGE"
           } >> "$GITHUB_STEP_SUMMARY"
