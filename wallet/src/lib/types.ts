@@ -26,6 +26,8 @@ export type StoredCredential = {
   expiresAt?: string;
   receivedAt: string;
   holderKey: HolderKey;
+  /** Result of checking the issuer signature when the credential was received. */
+  verification?: { signatureValid: boolean; integrityValid: boolean; certificateSubject?: string };
   demo?: boolean;
 };
 

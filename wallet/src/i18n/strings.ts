@@ -46,7 +46,6 @@ export const sl = {
   cameraPermission: 'Za skeniranje kod QR potrebujemo dostop do kamere.',
   grantCamera: 'Dovoli kamero',
   unknownLink: 'Te povezave ne prepoznam.',
-  comingSoon: 'Povezava je prepoznana. Prejem in deljenje potrdil prideta v naslednji posodobitvi.',
 
   // Issuance
   offerTitle: 'Ponudba potrdila',
@@ -57,6 +56,10 @@ export const sl = {
   decline: 'Zavrni',
   working: 'Obdelujem …',
   issuedOk: 'Potrdilo je shranjeno v denarnico.',
+  signatureOk: 'Podpis izdajatelja je veljaven.',
+  signatureUnchecked: 'Podpisa izdajatelja ni bilo mogoče preveriti. Izdajatelj ni na zaupanja vrednem seznamu.',
+  authCodeUnsupported: 'Ta izdajatelj zahteva prijavo v brskalniku (authorization code). v1 podpira samo kode za vnaprejšnjo avtorizacijo.',
+  deferredUnsupported: 'Izdajatelj bo potrdilo izdal kasneje. Odložena izdaja v v1 še ni podprta.',
 
   // Presentation
   requestTitle: 'Zahteva za podatke',
@@ -68,6 +71,10 @@ export const sl = {
   shareSelected: 'Deli izbrano',
   sharedOk: 'Podatki so bili poslani.',
   optional: 'neobvezno',
+  verifiedVerifier: 'Identiteta preverjevalca je potrjena s potrdilom za {domain}.',
+  trustNote: 'Potrdilo ni preverjeno proti seznamu registriranih zanašajočih se strank EU (v1).',
+  willShare: 'Delili boste',
+  credentialUsed: 'Iz dokumenta',
 
   // Credential detail
   details: 'Podrobnosti',
@@ -151,7 +158,6 @@ export const en: Record<StringKey, string> = {
   cameraPermission: 'Camera access is needed to scan QR codes.',
   grantCamera: 'Allow camera',
   unknownLink: 'This link is not recognised.',
-  comingSoon: 'Link recognised. Receiving and sharing credentials arrive in the next update.',
 
   offerTitle: 'Credential offer',
   offerFrom: 'Issuer',
@@ -161,6 +167,10 @@ export const en: Record<StringKey, string> = {
   decline: 'Decline',
   working: 'Working …',
   issuedOk: 'The credential was saved to your wallet.',
+  signatureOk: 'The issuer signature is valid.',
+  signatureUnchecked: 'The issuer signature could not be verified. The issuer is not on a trusted list.',
+  authCodeUnsupported: 'This issuer needs a browser sign-in (authorization code). v1 supports pre-authorized codes only.',
+  deferredUnsupported: 'The issuer will issue the credential later. Deferred issuance is not supported in v1 yet.',
 
   requestTitle: 'Data request',
   requestFrom: 'Requested by',
@@ -171,6 +181,10 @@ export const en: Record<StringKey, string> = {
   shareSelected: 'Share selected',
   sharedOk: 'Your data was sent.',
   optional: 'optional',
+  verifiedVerifier: 'Verifier identity confirmed by a certificate for {domain}.',
+  trustNote: 'The certificate is not checked against the EU relying party register (v1).',
+  willShare: 'You will share',
+  credentialUsed: 'From document',
 
   details: 'Details',
   issuer: 'Issuer',

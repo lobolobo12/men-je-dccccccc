@@ -16,6 +16,13 @@ export default function CredentialDetail() {
     <Screen>
       <Title>{credentialTitle(cred, w.t)}</Title>
       {cred.demo ? <Banner text={w.t('demoNotice')} /> : null}
+      {cred.verification ? (
+        cred.verification.signatureValid && cred.verification.integrityValid ? (
+          <Banner tone="ok" text={`${w.t('signatureOk')}${cred.verification.certificateSubject ? `\n${cred.verification.certificateSubject}` : ''}`} />
+        ) : (
+          <Banner text={w.t('signatureUnchecked')} />
+        )
+      ) : null}
       <Card>
         {cred.claims.map((c) => (
           <Row key={c.path.join('.')} label={attributeLabel(claimName(c), w.locale)} value={formatValue(c.value)} />

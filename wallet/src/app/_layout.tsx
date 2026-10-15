@@ -33,6 +33,8 @@ function Root() {
     >
       <Stack.Screen name="index" options={{ title: w.t('appName') }} />
       <Stack.Screen name="scan" options={{ title: w.t('scanTitle'), presentation: 'modal' }} />
+      <Stack.Screen name="offer" options={{ title: w.t('offerTitle') }} />
+      <Stack.Screen name="request" options={{ title: w.t('requestTitle') }} />
       <Stack.Screen name="credential/[id]" options={{ title: w.t('details') }} />
       <Stack.Screen name="activity" options={{ title: w.t('activityTitle') }} />
       <Stack.Screen name="settings" options={{ title: w.t('settings') }} />

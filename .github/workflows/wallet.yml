@@ -67,7 +67,7 @@ jobs:
             --message "${GITHUB_SHA::7}" --platform all --non-interactive --json > update.json
           PROJECT_ID=$(node -p 'require("./app.json").expo.extra.eas.projectId')
           GROUP=$(node -p 'require("./update.json")[0].group')
-          OWNER=$(npx --yes eas-cli@latest whoami 2>/dev/null | head -1)
+          OWNER=$(npx --yes eas-cli@latest whoami 2>/dev/null | head -1 | awk '{print $1}')
           LINK="exp://u.expo.dev/$PROJECT_ID/group/$GROUP"
           PAGE="https://expo.dev/accounts/$OWNER/projects/si-wallet/updates/$GROUP"
           echo "Expo Go link: $LINK"

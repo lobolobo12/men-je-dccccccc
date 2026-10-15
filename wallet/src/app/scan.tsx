@@ -1,4 +1,5 @@
 import { CameraView, useCameraPermissions } from 'expo-camera';
+import { router } from 'expo-router';
 import { useRef, useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
 import { Body, Button, Input, Label, Screen } from '../components/ui';
@@ -18,8 +19,8 @@ export default function Scan() {
       Alert.alert(w.t('error'), w.t('unknownLink'));
       return;
     }
-    // OpenID4VCI / OpenID4VP flows land in the next update; until then say so honestly.
-    Alert.alert(w.t('comingSoon'));
+    handled.current = true;
+    router.replace({ pathname: link.kind === 'offer' ? '/offer' : '/request', params: { uri: link.uri } });
   };
 
   return (
