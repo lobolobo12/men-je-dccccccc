@@ -1,0 +1,52 @@
+{
+  "expo": {
+    "name": "SI Wallet",
+    "slug": "si-wallet",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "si.wallet.demo"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "package": "si.wallet.demo"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "scheme": [
+      "siwallet",
+      "openid-credential-offer",
+      "openid4vp",
+      "eudi-openid4vp",
+      "haip"
+    ],
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-localization",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "SI Wallet uporablja kamero za branje QR kod. / SI Wallet uses the camera to scan QR codes.",
+          "recordAudioAndroid": false
+        }
+      ],
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "SI Wallet uporablja Face ID za odklepanje denarnice. / SI Wallet uses Face ID to unlock the wallet."
+        }
+      ]
+    ]
+  }
+}
