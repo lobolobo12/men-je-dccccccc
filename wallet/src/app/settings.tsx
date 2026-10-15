@@ -1,7 +1,8 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import * as Clipboard from 'expo-clipboard';
 import { Alert } from 'react-native';
-import { useTheme } from '../components/theme';
+import { Hero } from '../components/Hero';
+import { heroColors, useTheme } from '../components/theme';
 import { Body, Card, ListRow, Screen, Section } from '../components/ui';
 import { makeDemoCredentials } from '../lib/demo';
 import { useWallet } from '../state/wallet';
@@ -17,7 +18,7 @@ export default function Settings() {
   ] as const;
 
   return (
-    <Screen>
+    <Screen header={<Hero colors={heroColors.settings} icon="settings-outline" title={w.t('settings')} subtitle={w.t('settingsSubtitle')} />}>
       <Section>{w.t('language')}</Section>
       <Card padded={false}>
         {languages.map(([value, title], i) => (

@@ -1,6 +1,7 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Linking, StyleSheet, Text, View } from 'react-native';
-import { fonts, useTheme } from '../components/theme';
+import { Hero } from '../components/Hero';
+import { fonts, heroColors, useTheme } from '../components/theme';
 import { Body, Button, Card, Notice, Screen, type IconName } from '../components/ui';
 import type { LogEntry } from '../lib/types';
 import { useWallet } from '../state/wallet';
@@ -20,15 +21,16 @@ export default function Activity() {
   const w = useWallet();
   const t = useTheme();
   const log = w.data?.log ?? [];
+  const header = <Hero colors={heroColors.activity} icon="time-outline" title={w.t('activityTitle')} subtitle={w.t('activitySubtitle')} />;
   if (log.length === 0) {
     return (
-      <Screen>
+      <Screen header={header}>
         <Notice tone="info" text={w.t('activityEmpty')} />
       </Screen>
     );
   }
   return (
-    <Screen>
+    <Screen header={header}>
       {log.map((e) => (
         <Card key={e.id}>
           <View style={styles.head}>

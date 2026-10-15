@@ -2,7 +2,9 @@ import { CameraView, useCameraPermissions } from 'expo-camera';
 import { router } from 'expo-router';
 import { useRef, useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
-import { Body, Button, Input, Screen, Section } from '../components/ui';
+import { Hero } from '../components/Hero';
+import { heroColors } from '../components/theme';
+import { Body, Button, Card, Input, Screen, Section } from '../components/ui';
 import { classifyLink } from '../protocol/links';
 import { useWallet } from '../state/wallet';
 
@@ -24,8 +26,7 @@ export default function Scan() {
   };
 
   return (
-    <Screen>
-      <Body muted>{w.t('scanHint')}</Body>
+    <Screen header={<Hero colors={heroColors.scan} icon="scan-outline" title={w.t('scanTitle')} subtitle={w.t('scanHint')} />}>
       {permission?.granted ? (
         <View style={styles.camera}>
           <CameraView
@@ -36,10 +37,11 @@ export default function Scan() {
           />
         </View>
       ) : (
-        <>
+        <Card>
           <Body>{w.t('cameraPermission')}</Body>
+          <View style={{ height: 12 }} />
           <Button icon="camera-outline" title={w.t('grantCamera')} onPress={requestPermission} />
-        </>
+        </Card>
       )}
       <Section>{w.t('pasteLink')}</Section>
       <Input

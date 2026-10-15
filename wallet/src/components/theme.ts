@@ -58,6 +58,25 @@ export const kindGradients: Record<string, [string, string]> = {
   other: ['#434B63', '#76819E'],
 };
 
+/** Per-screen header colours, each tied to what the screen does. */
+export const heroColors = {
+  scan: ['#1A2233', '#2B3650'] as [string, string], // camera: graphite
+  offer: ['#1B6E3A', '#4FAE45'] as [string, string], // receiving: meadow green
+  request: ['#8A5200', '#C98404'] as [string, string], // sharing needs care: amber
+  activity: ['#0E568F', '#2496CC'] as [string, string], // history: Lake Bled
+  settings: ['#3E4A63', '#5B6886'] as [string, string], // slate
+};
+
+/** Start and PIN screens: night over Triglav, with the mountain in gold. */
+export const night = {
+  from: '#0B1F4D',
+  to: '#163A8A',
+  gold: '#F2C14E',
+  goldLight: '#FFE08A',
+  text: '#FFFFFF',
+  muted: '#C9D3EA',
+};
+
 export const fonts = {
   regular: 'AtkinsonHyperlegibleNext_400Regular',
   medium: 'AtkinsonHyperlegibleNext_500Medium',

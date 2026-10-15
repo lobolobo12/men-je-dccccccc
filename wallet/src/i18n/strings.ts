@@ -93,6 +93,10 @@ export const sl = {
 
   // Activity
   activityTitle: 'Dejavnost',
+  activitySubtitle: 'Kdo je kdaj prejel vaše podatke.',
+  settingsSubtitle: 'Jezik, varnost in vaši podatki.',
+  offerSubtitle: 'Preverite, kaj prejemate, preden sprejmete.',
+  requestSubtitle: 'Delite samo, kar je res potrebno.',
   activityEmpty: 'Ni še zabeleženih dejavnosti.',
   log_issuance: 'Prejeto potrdilo',
   log_presentation: 'Deljeni podatki',
@@ -208,6 +212,10 @@ export const en: Record<StringKey, string> = {
   delete: 'Delete',
 
   activityTitle: 'Activity',
+  activitySubtitle: 'Who received your data and when.',
+  settingsSubtitle: 'Language, security and your data.',
+  offerSubtitle: 'Check what you receive before accepting.',
+  requestSubtitle: 'Only share what is really needed.',
   activityEmpty: 'No activity yet.',
   log_issuance: 'Credential received',
   log_presentation: 'Data shared',

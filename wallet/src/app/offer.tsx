@@ -1,6 +1,8 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator } from 'react-native';
+import { Hero } from '../components/Hero';
+import { heroColors } from '../components/theme';
 import { Body, Button, Card, Field, Input, Notice, Screen, Section, Title } from '../components/ui';
 import { attributeLabel } from '../i18n/attributes';
 import { configurationName, displayName, IssuanceError, PRE_AUTH_GRANT, acceptOffer, resolveOffer, type ResolvedOffer } from '../protocol/oid4vci';
@@ -30,7 +32,7 @@ export default function Offer() {
 
   if (error) {
     return (
-      <Screen>
+      <Screen header={<Hero colors={heroColors.offer} icon="download-outline" title={w.t('offerTitle')} subtitle={w.t('offerSubtitle')} />}>
         <Title>{w.t('error')}</Title>
         <Notice text={error} />
         <Button title={w.t('ok')} onPress={() => router.back()} />
@@ -39,7 +41,7 @@ export default function Offer() {
   }
   if (!resolved) {
     return (
-      <Screen>
+      <Screen header={<Hero colors={heroColors.offer} icon="download-outline" title={w.t('offerTitle')} subtitle={w.t('offerSubtitle')} />}>
         <ActivityIndicator />
       </Screen>
     );
@@ -75,7 +77,7 @@ export default function Offer() {
   };
 
   return (
-    <Screen>
+    <Screen header={<Hero colors={heroColors.offer} icon="download-outline" title={w.t('offerTitle')} subtitle={w.t('offerSubtitle')} />}>
       <Card>
         <Field label={w.t('offerFrom')} value={`${displayName(issuer.display, w.locale) ?? ''}\n${issuer.credential_issuer}`.trim()} />
       </Card>

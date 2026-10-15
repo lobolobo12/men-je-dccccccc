@@ -1,7 +1,8 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, Linking, Pressable, StyleSheet, Switch, Text, View } from 'react-native';
-import { fonts, useTheme } from '../components/theme';
+import { Hero } from '../components/Hero';
+import { fonts, heroColors, useTheme } from '../components/theme';
 import { Button, Card, Field, Notice, Screen, Section, Title } from '../components/ui';
 import { attributeLabel } from '../i18n/attributes';
 import { claimName, credentialTitle, formatValue } from '../lib/display';
@@ -58,7 +59,7 @@ export default function Request() {
 
   if (error) {
     return (
-      <Screen>
+      <Screen header={<Hero colors={heroColors.request} icon="shield-checkmark-outline" title={w.t('requestTitle')} subtitle={w.t('requestSubtitle')} />}>
         <Title>{w.t('error')}</Title>
         <Notice text={error} />
         <Button title={w.t('ok')} onPress={() => router.back()} />
@@ -67,7 +68,7 @@ export default function Request() {
   }
   if (!resolved) {
     return (
-      <Screen>
+      <Screen header={<Hero colors={heroColors.request} icon="shield-checkmark-outline" title={w.t('requestTitle')} subtitle={w.t('requestSubtitle')} />}>
         <ActivityIndicator />
       </Screen>
     );
@@ -113,7 +114,7 @@ export default function Request() {
     setChoices((prev) => prev.map((c, i) => (i !== ci ? c : { ...c, items: c.items.map((it, j) => (j === ii ? { ...it, on: !it.on } : it)) })));
 
   return (
-    <Screen>
+    <Screen header={<Hero colors={heroColors.request} icon="shield-checkmark-outline" title={w.t('requestTitle')} subtitle={w.t('requestSubtitle')} />}>
       <Card>
         <Field label={w.t('requestFrom')} value={`${verifier.name}\n${verifier.clientId}`} />
       </Card>

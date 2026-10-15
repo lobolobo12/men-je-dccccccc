@@ -6,10 +6,11 @@ import { fonts } from './theme';
 
 export const PIN_LENGTH = 6;
 
-type Props = { onComplete: (pin: string) => void; disabled?: boolean; color?: string; keyColor?: string };
+type Props = { onComplete: (pin: string) => void; disabled?: boolean; color?: string; dotColor?: string; keyColor?: string };
 
-/** Numeric PIN pad drawn for a dark/coloured background. */
-export function PinPad({ onComplete, disabled, color = '#FFFFFF', keyColor = 'rgba(255,255,255,0.12)' }: Props) {
+/** Numeric PIN pad; colours are passed in by the screen it sits on. */
+export function PinPad({ onComplete, disabled, color = '#FFFFFF', dotColor, keyColor = 'rgba(255,255,255,0.12)' }: Props) {
+  const dot = dotColor ?? color;
   const [pin, setPin] = useState('');
 
   const press = (key: string) => {
@@ -28,7 +29,7 @@ export function PinPad({ onComplete, disabled, color = '#FFFFFF', keyColor = 'rg
     <View style={styles.wrap}>
       <View style={styles.dots} accessibilityLabel={`${pin.length} / ${PIN_LENGTH}`}>
         {Array.from({ length: PIN_LENGTH }, (_, i) => (
-          <View key={i} style={[styles.dot, { borderColor: color, backgroundColor: i < pin.length ? color : 'transparent' }]} />
+          <View key={i} style={[styles.dot, { borderColor: dot, backgroundColor: i < pin.length ? dot : 'transparent' }]} />
         ))}
       </View>
       <View style={styles.grid}>

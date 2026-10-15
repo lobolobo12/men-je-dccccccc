@@ -16,9 +16,11 @@ type Props = {
   opacity?: number;
   strokeWidth?: number;
   fillPeaks?: boolean;
+  /** Solid colour for the mountain body instead of a tint of the line colour. */
+  fill?: string;
 };
 
-export function TriglavMotif({ width, height, color = '#FFFFFF', colors, opacity = 0.18, strokeWidth = 2.5, fillPeaks = false }: Props) {
+export function TriglavMotif({ width, height, color = '#FFFFFF', colors, opacity = 0.18, strokeWidth = 2.5, fillPeaks = false, fill }: Props) {
   // With an explicit height the drawing is stretched to fit, which keeps the ridge readable
   // as a low band instead of a tall mountain.
   const h = height ?? (width * 160) / 320;
@@ -33,7 +35,8 @@ export function TriglavMotif({ width, height, color = '#FFFFFF', colors, opacity
           </LinearGradient>
         </Defs>
       ) : null}
-      {fillPeaks ? <Path d={`${PEAKS} L320 160 L0 160 Z`} fill={paint} opacity={opacity * 0.6} /> : null}
+      {fill ? <Path d={`${PEAKS} L320 160 L0 160 Z`} fill={fill} /> : null}
+      {fillPeaks && !fill ? <Path d={`${PEAKS} L320 160 L0 160 Z`} fill={paint} opacity={opacity * 0.6} /> : null}
       <Path d={PEAKS} stroke={paint} strokeWidth={strokeWidth} fill="none" strokeLinejoin="round" opacity={opacity * 1.6} />
       <Path d={WAVE_1} stroke={paint} strokeWidth={strokeWidth} fill="none" strokeLinecap="round" opacity={opacity * 1.3} />
       <Path d={WAVE_2} stroke={paint} strokeWidth={strokeWidth} fill="none" strokeLinecap="round" opacity={opacity} />

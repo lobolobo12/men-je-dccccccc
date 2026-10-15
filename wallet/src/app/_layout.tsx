@@ -46,15 +46,17 @@ function Root() {
           headerTitleStyle: { color: t.text, fontFamily: fonts.heading, fontSize: 17 },
           contentStyle: { backgroundColor: t.bg },
           headerBackButtonDisplayMode: 'minimal',
+          headerShown: false,
         }}
       >
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="scan" options={{ title: w.t('scanTitle'), presentation: 'modal' }} />
-        <Stack.Screen name="offer" options={{ title: w.t('offerTitle') }} />
-        <Stack.Screen name="request" options={{ title: w.t('requestTitle') }} />
-        <Stack.Screen name="credential/[id]" options={{ title: '' }} />
-        <Stack.Screen name="activity" options={{ title: w.t('activityTitle') }} />
-        <Stack.Screen name="settings" options={{ title: w.t('settings') }} />
+        {/* Every screen draws its own coloured Hero header instead of a navigation bar. */}
+        <Stack.Screen name="index" />
+        <Stack.Screen name="scan" />
+        <Stack.Screen name="offer" />
+        <Stack.Screen name="request" />
+        <Stack.Screen name="credential/[id]" />
+        <Stack.Screen name="activity" />
+        <Stack.Screen name="settings" />
       </Stack>
     </>
   );

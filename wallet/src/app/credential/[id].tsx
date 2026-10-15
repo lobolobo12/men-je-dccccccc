@@ -1,9 +1,11 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { Alert } from 'react-native';
-import { CredentialCard } from '../../components/CredentialCard';
+import { KIND_ICON } from '../../components/CredentialCard';
+import { Hero } from '../../components/Hero';
+import { kindGradients } from '../../components/theme';
 import { Button, Card, Field, Notice, Screen, Section } from '../../components/ui';
 import { attributeLabel } from '../../i18n/attributes';
-import { claimName, formatValue, sortClaims } from '../../lib/display';
+import { claimName, claimValue, credentialTitle, formatValue, sortClaims } from '../../lib/display';
 import { useWallet } from '../../state/wallet';
 
 export default function CredentialDetail() {
@@ -14,10 +16,19 @@ export default function CredentialDetail() {
   const date = (iso?: string) => (iso ? new Date(iso).toLocaleDateString(w.locale === 'sl' ? 'sl-SI' : 'en-GB') : '–');
   const v = cred.verification;
   const claims = sortClaims(cred.claims);
+  const holder = [claimValue(cred, 'given_name'), claimValue(cred, 'family_name')].filter(Boolean).join(' ');
 
   return (
-    <Screen>
-      <CredentialCard credential={cred} />
+    <Screen
+      header={
+        <Hero
+          colors={kindGradients[cred.kind]}
+          icon={KIND_ICON[cred.kind]}
+          title={holder || credentialTitle(cred, w.t)}
+          subtitle={`${credentialTitle(cred, w.t)}\n${cred.expiresAt ? w.t('expires', { date: date(cred.expiresAt) }) : ''}`.trim()}
+        />
+      }
+    >
       {cred.demo ? <Notice text={w.t('demoNotice')} icon="flask-outline" /> : null}
       {v ? (
         v.signatureValid && v.integrityValid ? (

@@ -6,12 +6,29 @@ import { fonts, radius, useTheme } from './theme';
 
 export type IconName = ComponentProps<typeof Ionicons>['name'];
 
-export function Screen({ children, scroll = true, edges = ['bottom', 'left', 'right'] }: { children: ReactNode; scroll?: boolean; edges?: ('top' | 'bottom' | 'left' | 'right')[] }) {
+export function Screen({
+  children,
+  header,
+  scroll = true,
+  edges,
+}: {
+  children: ReactNode;
+  /** Full-bleed coloured header (see Hero) drawn above the content. */
+  header?: ReactNode;
+  scroll?: boolean;
+  edges?: ('top' | 'bottom' | 'left' | 'right')[];
+}) {
   const t = useTheme();
   const body = <View style={styles.inner}>{children}</View>;
+  const content = (
+    <>
+      {header}
+      {body}
+    </>
+  );
   return (
-    <SafeAreaView edges={edges} style={{ flex: 1, backgroundColor: t.bg }}>
-      {scroll ? <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>{body}</ScrollView> : body}
+    <SafeAreaView edges={edges ?? (header ? ['bottom', 'left', 'right'] : ['top', 'bottom', 'left', 'right'])} style={{ flex: 1, backgroundColor: t.bg }}>
+      {scroll ? <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>{content}</ScrollView> : content}
     </SafeAreaView>
   );
 }

@@ -10,7 +10,7 @@ import { fonts, kindGradients, radius } from './theme';
 import type { IconName } from './ui';
 import { useTilt } from './useTilt';
 
-const KIND_ICON: Record<CredentialKind, IconName> = {
+export const KIND_ICON: Record<CredentialKind, IconName> = {
   pid: 'person-circle-outline',
   mdl: 'car-outline',
   diploma: 'school-outline',
